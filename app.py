@@ -55,25 +55,19 @@ with st.container():
         st.markdown(f"<div class='{css_class}'>{content}</div>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
-# Filtro temático
-tema = st.selectbox(
-    "Selecciona un tema del contrato:",
-    ["General", "Pago", "Cláusulas", "Supervisión", "Penalidades", "Plazos"]
-)
-
-# Entrada del usuario
-user_input = st.chat_input("Escribe tu duda aquí...")
+# Entrada sin filtro
+user_input = st.chat_input("Escribe tu duda sobre el contrato...")
 
 if user_input:
-    consulta_final = f"Tema: {tema}. Pregunta: {user_input}"
-    st.session_state.messages.append({"role": "user", "content": consulta_final})
+    st.session_state.messages.append({"role": "user", "content": user_input})
 
     openai.beta.threads.messages.create(
         thread_id=st.session_state.thread_id,
         role="user",
-        content=consulta_final
+        content=user_input
     )
 
+    # Incluye vector store (archivo cargado)
     run = openai.beta.threads.runs.create(
         thread_id=st.session_state.thread_id,
         assistant_id=ASSISTANT_ID,
