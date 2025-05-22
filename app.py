@@ -6,10 +6,8 @@ import time
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 ASSISTANT_ID = "asst_Gln1InMVBScTfNAyDAdWn6Dg"
 
-# Título
-st.markdown("<h1 style='text-align: center;'>🤖 ChatBali: Consulta tu contrato</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>🤖 ChatBali: Consulta tu Contrato Hospital Concesionario</h1>", unsafe_allow_html=True)
 
-# Estilos CSS tipo chat moderno
 st.markdown("""
     <style>
         .message-user {
@@ -45,7 +43,7 @@ if "thread_id" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Mostrar historial de chat
+# Mostrar historial
 with st.container():
     st.markdown("<div class='chat-container'>", unsafe_allow_html=True)
     for msg in st.session_state.messages:
@@ -55,7 +53,7 @@ with st.container():
         st.markdown(f"<div class='{css_class}'>{content}</div>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
-# Entrada sin filtro
+# Entrada de usuario
 user_input = st.chat_input("Escribe tu duda sobre el contrato...")
 
 if user_input:
@@ -67,17 +65,15 @@ if user_input:
         content=user_input
     )
 
-    # Incluye vector store (archivo cargado)
-    run = openai.beta.threads.runs.create(
-        thread_id=st.session_state.thread_id,
-        assistant_id=ASSISTANT_ID,
-        tool_resources={
-            "file_search": {
-                "vector_store_ids": ["vs_6827fea4f24881919751c6f9f20948"]
-            }
+   run = openai.beta.threads.runs.create(
+    thread_id=st.session_state.thread_id,
+    assistant_id=ASSISTANT_ID,
+    tool_resources={
+        "file_search": {
+            "vector_store_ids": ["vs_682f7eaf24881919751cfe9f20948"]
         }
-    )
-
+    }
+)
     with st.spinner("Pensando..."):
         while True:
             status = openai.beta.threads.runs.retrieve(
